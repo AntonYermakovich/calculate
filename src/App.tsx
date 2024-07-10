@@ -4,20 +4,21 @@ import "./App.scss";
 function App() {
   const [display, setDisplay] = useState<number | string>(0);
   const [num1, setNum1] = useState<number | null>(null);
-  // const [num2, setNum2] = useState<number | null>(null);
   const [operator, setOperator] = useState<string>("");
 
-  const clickHandler = (symbol: string) => {
-    // if(!num1)
+  const clickHandler = (value: string) => {
+    if(value === '.') return setDisplay('0.')
+    if(value === 'ac'.toUpperCase()) return allReset()
+    if(value === 'c'.toUpperCase()) return removeLastValue()
 
-    if (symbol === "+" || symbol === "-" || symbol === "*" || symbol === "/") {
-      setOperator(symbol);
+    if (value === "+" || value === "-" || value === "*" || value === "/") {
+      setOperator(value);
       setDisplay("");
       setNum1(+display);
       return;
     }
 
-    if (symbol === "=" && !!operator) {
+    if (value === "=" && !!operator) {
       if (!num1 || !display) return;
 
       switch (operator) {
@@ -36,11 +37,22 @@ function App() {
       }
 
       setOperator("");
-      setNum1(null)
+      setNum1(null);
       return;
     }
 
-    setDisplay((prev) => (prev ? prev + symbol : symbol));
+    setDisplay((prev) => (prev ? prev + value : value));
+  };
+
+  const removeLastValue = () => {
+    if(display.toString().length === 1) return setDisplay(0)
+    return setDisplay(display.toString().slice(0, -1))
+  }
+
+  const allReset = () => {
+    setDisplay(0);
+    setOperator("");
+    setNum1(null);
   };
 
   return (
